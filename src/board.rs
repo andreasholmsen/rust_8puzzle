@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{collections, fmt::Display};
 
 /// Size of the board. The board is a square of size N x N.
 pub const N: usize = 3;
@@ -111,8 +111,17 @@ impl Board {
 
     /// Returs `true` if the given sequence of actions is a valid plan that leads to the goal state.
     pub fn is_valid_plan(&self, actions: &[Direction]) -> bool {
-        let mut current_board = *self;
-        todo!("replay each of the moves in the actions array and see if ends in the goal state")
+        let mut board = self.clone();
+        
+        for &action in actions {
+            if let Some(next) = board.apply(action) {
+                board = next;
+            } else {
+                return false;
+            }
+
+        }
+        return board == Board::GOAL;
     }
 }
 
@@ -251,10 +260,10 @@ mod tests {
         assert_eq!(board.position(EMPTY_CELL), (2, 0));
         assert_eq!(board.value_at(2, 0), EMPTY_CELL);
 
-        assert_eq!(board.value_at(1, 1), todo!());
-        assert_eq!(board.value_at(2, 2), todo!());
-        assert_eq!(board.position(3), todo!());
-        assert_eq!(board.position(5), todo!());
+        assert_eq!(board.value_at(1, 1), 5);
+        assert_eq!(board.value_at(2, 2), 8);
+        assert_eq!(board.position(3), (0,2));
+        assert_eq!(board.position(5), (1,1));
     }
 
     #[test]
@@ -265,9 +274,9 @@ mod tests {
             Some(Board::new([[1, 2, 3], [0, 5, 6], [4, 7, 8]]))
         );
         // what is the result of moving the empty cell right? was the `board` binding modified by the apply method?
-        assert_eq!(board.apply(Direction::Right), todo!());
+        assert_eq!(board.apply(Direction::Right), Some(Board::new([[1, 2, 3], [4, 5, 6], [7, 0, 8]])));
         // what is the result of moving the empty cell left?
-        assert_eq!(board.apply(Direction::Left), todo!());
+        assert_eq!(board.apply(Direction::Left), None);
     }
 
     #[test]
