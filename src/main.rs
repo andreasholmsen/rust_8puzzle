@@ -12,5 +12,12 @@ use heuristics::*;
 use search::*;
 
 fn main() {
-    println!("I ain't doing nothing yet.")
+    let mut board = Board::new([[1,2,3], [4,8,5], [0, 7,6]]);
+    println!("{board}");
+
+    let actions: [Direction; 4] = [Direction::Right, Direction::Up, Direction::Right, Direction::Down];
+
+    println!("{}", Board::is_valid_plan(&board, &actions));
+
+    Board::play(&board, &actions);
 }
