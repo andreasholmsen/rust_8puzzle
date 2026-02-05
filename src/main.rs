@@ -17,7 +17,6 @@ fn main() {
 
     let actions: [Direction; 4] = [Direction::Right, Direction::Up, Direction::Right, Direction::Down];
 
-    println!("{}", Board::is_valid_plan(&board, &actions));
 
-    Board::play(&board, &actions);
+    // Works on the first 20 INSTANCES, using cargo test
 }

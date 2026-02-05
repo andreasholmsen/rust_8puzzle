@@ -42,16 +42,78 @@ pub fn search(init_state: Board) -> (Option<Vec<Direction>>, Stats) {
     // keeps track all states that have been expanded
     let mut expanded: HashSet<Board> = HashSet::new();
 
-    // ...
-    // TODO: implement the search algorithm
-    // ...
+    let mut cursor;
+
+    heap.insert(init_state, 0);
+
+    let mut i = 0;
+    loop {
+        i += 1;
+
+        // if heap empty, return false TODO
+        // No error handling so far for invalid results.
+        if heap.is_empty() {
+            println!("IS EMPTY!");
+        }
+
+        // Extract exploring
+        let exploring_unwrapped = heap.pop().unwrap();
+        
+        // Checking hasn't been expanded. REDUNDANT?
+        //if expanded.contains(&exploring_unwrapped) {continue;}
+
+        // Add currently exploring to list of explored
+        expanded.insert(exploring_unwrapped);
+
+        // If we found goal, stop
+        if exploring_unwrapped == Board::GOAL {
+            println!("Found result!");
+            println!("{exploring_unwrapped}");
+            cursor = exploring_unwrapped.clone();
+            break;
+        }
+
+        for direction in [Direction::Up, Direction::Down, Direction::Left, Direction::Right] {
+            if let Some(temp_board) = exploring_unwrapped.apply(direction) {
+                
+                // If already explored, ignore
+                if expanded.contains(&temp_board) {continue;}
+                
+                // Add elements to explore into the heaps
+                heap.insert(temp_board, i);
+                path_costs.insert(temp_board, i);
+                predecessors.insert(temp_board, (exploring_unwrapped, direction));
+            }
+        }
+    }
+
+    // Recreate list of directions necessary for result
+    let mut result = Vec::new();
+    loop {
+        
+        // Print current step (for testing)
+        //println!("{cursor}");
+
+        if cursor == init_state {break;}
+        
+        // Get predecessor and move
+        let pred = predecessors.get(&cursor).unwrap();
+        result.push(pred.1);
+
+        // Move cursor up
+        cursor = pred.0;
+    }
+
+    // Reverse result for correct order
+    result.reverse();
+
 
     // here is an example to measure the runtime and returns the statistics
     let runtime = start.elapsed();
     // example to construct a Stats instance
     let stats = Stats::new(0, runtime);
     // return the results and associated stats
-    (todo!(), stats)
+    (Some(result), stats)
 }
 
 #[cfg(test)]
