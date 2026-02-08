@@ -17,6 +17,5 @@ fn main() {
 
     let actions: [Direction; 4] = [Direction::Right, Direction::Up, Direction::Right, Direction::Down];
 
-
     // Works on the first 20 INSTANCES, using cargo test
 }

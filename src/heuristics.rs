@@ -34,16 +34,11 @@ impl Heuristic {
             // Can't just use sort, since 0 is at the end of the list and not at the beginning
             Heuristic::Manhattan => {
                 let mut sum = 0;
-                for i in 1..=8 {
+                for i in 0..=8 {
                     let pos = board.position(i);
+                    let value_at = Board::GOAL.position(i);
 
-                    let index: i8 = i as i8;
-                    let row: i8 = pos.0 as i8;
-                    let col: i8 = pos.1 as i8;
-
-
-                    sum += (row - (index/3)).abs() + (col - index%3).abs();
-                    println!("{} {}", row, index/3);
+                    sum += pos.0.abs_diff(value_at.0) + pos.1.abs_diff(value_at.1);
                 }
                 sum as u32
             }
